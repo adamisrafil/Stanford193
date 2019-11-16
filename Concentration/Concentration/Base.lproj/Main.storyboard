@@ -335,6 +335,9 @@
                                 <state key="normal" title="New Game">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="newGameStarted:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Cwu-83-SVB"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -434,6 +437,7 @@
                     </view>
                     <connections>
                         <outlet property="flipCountLabel" destination="1sW-DY-N6o" id="qLm-cz-2ba"/>
+                        <outlet property="scoreLabel" destination="M9D-hr-jX7" id="wla-sh-Mqs"/>
                         <outletCollection property="cardButtons" destination="EcL-kf-lnl" collectionClass="NSMutableArray" id="IH7-sM-Htq"/>
                         <outletCollection property="cardButtons" destination="o1U-dM-iK7" collectionClass="NSMutableArray" id="iwL-FC-Qfr"/>
                         <outletCollection property="cardButtons" destination="UTF-s3-LOs" collectionClass="NSMutableArray" id="aWZ-qJ-TKV"/>

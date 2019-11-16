@@ -18,15 +18,42 @@ class ViewController: UIViewController {
         }
     }
     
+    var score = 0 {
+        didSet {
+            scoreLabel.text = "Score: \(score)"
+        }
+    }
+    
     @IBOutlet weak var flipCountLabel: UILabel!
+    
+    @IBOutlet weak var scoreLabel: UILabel!
     
     @IBOutlet var cardButtons: [UIButton]!
     
     @IBAction func touchCard(_ sender: UIButton) {
-        flipCount += 1
         if let cardNumber = cardButtons.firstIndex(of: sender) {
-            game.chooseCard(at: cardNumber)
+            let gameUpdate = game.chooseCard(at: cardNumber)
             updateViewFromModel()
+            flipCount = gameUpdate.flipCountReturn
+            score = gameUpdate.scoreReturn
+        }
+    }
+    
+    @IBAction func newGameStarted(_ sender: UIButton) {
+        flipCount = 0
+        score = 0
+        //        startNewGame()
+    }
+    
+    func startNewGame() {
+        for index in cardButtons.indices {
+            let button = cardButtons[index]
+            var card = game.cards[index]
+            card.isFaceUp = false
+            card.isMatched = false
+            button.backgroundColor = #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
+            button.setTitle("", for: UIControl.State.normal)
+            button.isHidden = false
         }
     }
     
@@ -45,9 +72,20 @@ class ViewController: UIViewController {
         }
     }
     
-    var emojiChoices = ["🎃","🏡","🖕🏻","👻","👐🏻","👿", "💩", "😃", "😂", "😍"]
+    var themeDictionary = [
+        "Sports" : ["⚽️","🏀","🏈","⚾️","🏓","🎾","🏐","🎱","🥏","🛹","🥅","🥌","🏂"],
+        "Animals" : ["🐶","🐱","🐧","🦁","🐨","🦊","🐼","🐻","🐣","🐯","🙉","🐔","🐙"],
+        "Face Emojis" : ["😀","😇","😂","🥰","😎","🤪","🧐","🥳","🤯","😱","😭","😧","🙁"],
+        "Funny Emojis" : ["🤬","😈","👻","💩","🖕🏻","💪🏻","🤖","👀","🤮","🥴","🥶","💀","👽"],
+        "Vehicles" : ["🚗","🛴","🚒","🛸","🛺","✈️","🚉","🏎","🚲","🚞","🚁","🛶","🦽"],
+        "Signs" : ["🍏","🥑","🍆","🍑","🥩","🥓","🍗","🍕","🌮","🍔","🍒","🍟","🧀"]
+    ]
+    
+    lazy var theme = themeDictionary.randomElement()!
+    
     
     var emoji = [Int:String]()
+    lazy var emojiChoices: [String] = theme.value
     
     func emoji(for card: Card) -> String {
         if emoji[card.identifier] == nil, emojiChoices.count > 0 {
@@ -57,4 +95,3 @@ class ViewController: UIViewController {
         return emoji[card.identifier] ?? "?"
     }
 }
-
