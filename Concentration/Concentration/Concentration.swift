@@ -14,8 +14,6 @@ class Concentration {
     
     var indexOfOneAndOnlyFaceUpCard: Int?
     
-    var seenCards = [Card]()
-    
     var score = 0
     
     var flipCount = 0

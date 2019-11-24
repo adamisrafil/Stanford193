@@ -10,7 +10,11 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    lazy var game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2)
+    lazy var game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
+    
+    var numberOfPairsOfCards: Int {
+        return (cardButtons.count + 1) / 2
+    }
     
     var flipCount = 0 {
         didSet{
@@ -22,6 +26,12 @@ class ViewController: UIViewController {
         didSet {
             scoreLabel.text = "Score: \(score)"
         }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupTheme()
+        setup()
     }
     
     @IBOutlet weak var flipCountLabel: UILabel!
@@ -42,19 +52,13 @@ class ViewController: UIViewController {
     @IBAction func newGameStarted(_ sender: UIButton) {
         flipCount = 0
         score = 0
-        //        startNewGame()
+        setup()
     }
     
-    func startNewGame() {
-        for index in cardButtons.indices {
-            let button = cardButtons[index]
-            var card = game.cards[index]
-            card.isFaceUp = false
-            card.isMatched = false
-            button.backgroundColor = #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
-            button.setTitle("", for: UIControl.State.normal)
-            button.isHidden = false
-        }
+    private func setup() {
+        game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
+        updateViewFromModel()
+        setupTheme()
     }
     
     func updateViewFromModel() {
@@ -72,25 +76,37 @@ class ViewController: UIViewController {
         }
     }
     
-    var themeDictionary = [
-        "Sports" : ["⚽️","🏀","🏈","⚾️","🏓","🎾","🏐","🎱","🥏","🛹","🥅","🥌","🏂"],
-        "Animals" : ["🐶","🐱","🐧","🦁","🐨","🦊","🐼","🐻","🐣","🐯","🙉","🐔","🐙"],
-        "Face Emojis" : ["😀","😇","😂","🥰","😎","🤪","🧐","🥳","🤯","😱","😭","😧","🙁"],
-        "Funny Emojis" : ["🤬","😈","👻","💩","🖕🏻","💪🏻","🤖","👀","🤮","🥴","🥶","💀","👽"],
-        "Vehicles" : ["🚗","🛴","🚒","🛸","🛺","✈️","🚉","🏎","🚲","🚞","🚁","🛶","🦽"],
-        "Signs" : ["🍏","🥑","🍆","🍑","🥩","🥓","🍗","🍕","🌮","🍔","🍒","🍟","🧀"]
-    ]
+    private var theme: [[String]] = []
+    private var randomTheme: [String] = []
+    private var animals: [String] = []
+    private var sports: [String] = []
+    private var faceEmojis: [String] = []
+    private var vehicles: [String] = []
+    private var funnyEmojis: [String] = []
+    private var foods: [String] = []
+    private var emoji = [Int: String]()
     
-    lazy var theme = themeDictionary.randomElement()!
+    private func setupTheme() {
+        sports = ["⚽️","🏀","🏈","⚾️","🏓","🎾","🏐","🎱","🥏","🛹","🥅","🥌","🏂"]
+        animals = ["🐶","🐱","🐧","🦁","🐨","🦊","🐼","🐻","🐣","🐯","🙉","🐔","🐙"]
+        faceEmojis = ["😀","😇","😂","🥰","😎","🤪","🧐","🥳","🤯","😱","😭","😧","🙁"]
+        funnyEmojis = ["🤬","😈","👻","💩","🖕🏻","💪🏻","🤖","👀","🤮","🥴","🥶","💀","👽"]
+        vehicles = ["🚗","🛴","🚒","🛸","🛺","✈️","🚉","🏎","🚲","🚞","🚁","🛶","🦽"]
+        foods = ["🍏","🥑","🍆","🍑","🥩","🥓","🍗","🍕","🌮","🍔","🍒","🍟","🧀"]
+        theme = [sports, animals, faceEmojis, funnyEmojis, vehicles, foods]
+        randomTheme = getRandomTheme()
+    }
     
-    
-    var emoji = [Int:String]()
-    lazy var emojiChoices: [String] = theme.value
+    private func getRandomTheme() -> [String] {
+        guard let index = theme.randomElement() else { return theme[0] }
+        return index
+    }
     
     func emoji(for card: Card) -> String {
-        if emoji[card.identifier] == nil, emojiChoices.count > 0 {
-            let randomIndex = Int(arc4random_uniform(UInt32(emojiChoices.count)))
-            emoji[card.identifier] = emojiChoices.remove(at: randomIndex)
+        if emoji[card.identifier] == nil {
+            if let randomIndex = randomTheme.indices.randomElement() {
+                emoji[card.identifier] = randomTheme.remove(at: randomIndex)
+            }
         }
         return emoji[card.identifier] ?? "?"
     }
