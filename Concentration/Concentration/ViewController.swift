@@ -84,7 +84,7 @@ class ViewController: UIViewController {
     private var vehicles: [String] = []
     private var funnyEmojis: [String] = []
     private var foods: [String] = []
-    private var emoji = [Int: String]()
+    private var emoji = [Card: String]()
     
     private func setupTheme() {
         sports = ["⚽️","🏀","🏈","⚾️","🏓","🎾","🏐","🎱","🥏","🛹","🥅","🥌","🏂"]
@@ -103,10 +103,10 @@ class ViewController: UIViewController {
     }
     
     private func emoji(for card: Card) -> String {
-        if emoji[card.identifier] == nil {
-            emoji[card.identifier] = randomTheme.remove(at: randomTheme.count.arc4random)
+        if emoji[card] == nil {
+            emoji[card] = randomTheme.remove(at: randomTheme.count.arc4random)
         }
-        return emoji[card.identifier] ?? "?"
+        return emoji[card] ?? "?"
     }
 }
 
