@@ -40,7 +40,6 @@
 			children = (
 				AE7830EE239D8C7B00BD7AA7 /* AppDelegate.swift */,
 				AE7830F9239D8C8300BD7AA7 /* LaunchScreen.storyboard */,
-				AE7830FC239D8C8300BD7AA7 /* Info.plist */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -68,6 +67,7 @@
 				AE7830F2239D8C7B00BD7AA7 /* ViewController.swift */,
 				AE7830F4239D8C7B00BD7AA7 /* Main.storyboard */,
 				AE7830F7239D8C8300BD7AA7 /* Assets.xcassets */,
+				AE7830FC239D8C8300BD7AA7 /* Info.plist */,
 			);
 			path = Set;
 			sourceTree = "<group>";
