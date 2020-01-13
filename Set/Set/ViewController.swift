@@ -57,6 +57,7 @@ class ViewController: UIViewController {
         updateViewFromModel()
         updateDrawButton()
         selectedButtons.removeAll()
+        score = 0
     }
     
     @IBAction func didPressCardButton(_ sender: UIButton) {
