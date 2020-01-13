@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE3EF16323CBDEF900DBCA34 /* SetGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3EF16223CBDEF900DBCA34 /* SetGame.swift */; };
+		AE3EF16523CBDF0900DBCA34 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3EF16423CBDF0900DBCA34 /* Card.swift */; };
 		AE7830EF239D8C7B00BD7AA7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7830EE239D8C7B00BD7AA7 /* AppDelegate.swift */; };
 		AE7830F3239D8C7B00BD7AA7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7830F2239D8C7B00BD7AA7 /* ViewController.swift */; };
 		AE7830F6239D8C7B00BD7AA7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AE7830F4239D8C7B00BD7AA7 /* Main.storyboard */; };
@@ -15,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AE3EF16223CBDEF900DBCA34 /* SetGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGame.swift; sourceTree = "<group>"; };
+		AE3EF16423CBDF0900DBCA34 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		AE7830EB239D8C7B00BD7AA7 /* Set.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Set.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE7830EE239D8C7B00BD7AA7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AE7830F2239D8C7B00BD7AA7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -66,6 +70,8 @@
 				AE4588DE23AA105B00B610A5 /* Supporting Files */,
 				AE7830F2239D8C7B00BD7AA7 /* ViewController.swift */,
 				AE7830F4239D8C7B00BD7AA7 /* Main.storyboard */,
+				AE3EF16223CBDEF900DBCA34 /* SetGame.swift */,
+				AE3EF16423CBDF0900DBCA34 /* Card.swift */,
 				AE7830F7239D8C8300BD7AA7 /* Assets.xcassets */,
 				AE7830FC239D8C8300BD7AA7 /* Info.plist */,
 			);
@@ -145,6 +151,8 @@
 			files = (
 				AE7830F3239D8C7B00BD7AA7 /* ViewController.swift in Sources */,
 				AE7830EF239D8C7B00BD7AA7 /* AppDelegate.swift in Sources */,
+				AE3EF16323CBDEF900DBCA34 /* SetGame.swift in Sources */,
+				AE3EF16523CBDF0900DBCA34 /* Card.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
