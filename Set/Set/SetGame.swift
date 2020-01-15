@@ -78,6 +78,7 @@ struct SetGame {
                 cardsOnTable += [cardDeck.remove(at: cardDeck.randomIndex)]
             }
         }
+        selectedCards.removeAll()
     }
     
     init() {

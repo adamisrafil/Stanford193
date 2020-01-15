@@ -49,6 +49,7 @@ class ViewController: UIViewController {
         set.draw()
         updateViewFromModel()
         updateDrawButton()
+        selectedButtons.removeAll()
     }
     
     @IBAction func didPressNewGameButton(_ sender: UIButton) {
