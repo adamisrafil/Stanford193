@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ConcentrationViewController.swift
 //  Concentration
 //
 //  Created by Adam Israfil on 11/14/19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ConcentrationViewController: UIViewController {
     
     private lazy var game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
     
@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTheme()
+//        setupTheme()
         setup()
     }
     
@@ -58,26 +58,27 @@ class ViewController: UIViewController {
     private func setup() {
         game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
         updateViewFromModel()
-        setupTheme()
+//        setupTheme()
     }
     
     private func updateViewFromModel() {
-        for index in cardButtons.indices {
-            let button = cardButtons[index]
-            let card = game.cards[index]
-            if card.isFaceUp {
-                button.setTitle(emoji(for: card), for: UIControl.State.normal)
-                button.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            }
-            else {
-                button.setTitle("", for: UIControl.State.normal)
-                button.backgroundColor = card.isMatched ? #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 0) : #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
+        if cardButtons != nil {
+            for index in cardButtons.indices {
+                let button = cardButtons[index]
+                let card = game.cards[index]
+                if card.isFaceUp {
+                    button.setTitle(emoji(for: card), for: UIControl.State.normal)
+                    button.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                }
+                else {
+                    button.setTitle("", for: UIControl.State.normal)
+                    button.backgroundColor = card.isMatched ? #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 0) : #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
+                }
             }
         }
     }
     
-    private var theme: [[String]] = []
-    private var randomTheme: [String] = []
+    private lazy var randomThemeOptions: [[String]] = setupTheme()
     private var animals: [String] = []
     private var sports: [String] = []
     private var faceEmojis: [String] = []
@@ -85,20 +86,29 @@ class ViewController: UIViewController {
     private var funnyEmojis: [String] = []
     private var foods: [String] = []
     private var emoji = [Card: String]()
+    private lazy var randomTheme: [String] = getRandomTheme()
     
-    private func setupTheme() {
+    var theme: [String]? {
+        didSet {
+            randomTheme = theme ?? getRandomTheme()
+            emoji = [:]
+            updateViewFromModel()
+        }
+    }
+    
+    private func setupTheme() -> [[String]] {
         sports = ["⚽️","🏀","🏈","⚾️","🏓","🎾","🏐","🎱","🥏","🛹","🥅","🥌","🏂"]
         animals = ["🐶","🐱","🐧","🦁","🐨","🦊","🐼","🐻","🐣","🐯","🙉","🐔","🐙"]
         faceEmojis = ["😀","😇","😂","🥰","😎","🤪","🧐","🥳","🤯","😱","😭","😧","🙁"]
         funnyEmojis = ["🤬","😈","👻","💩","🖕🏻","💪🏻","🤖","👀","🤮","🥴","🥶","💀","👽"]
         vehicles = ["🚗","🛴","🚒","🛸","🛺","✈️","🚉","🏎","🚲","🚞","🚁","🛶","🦽"]
         foods = ["🍏","🥑","🍆","🍑","🥩","🥓","🍗","🍕","🌮","🍔","🍒","🍟","🧀"]
-        theme = [sports, animals, faceEmojis, funnyEmojis, vehicles, foods]
-        randomTheme = getRandomTheme()
+        randomThemeOptions = [sports, animals, faceEmojis, funnyEmojis, vehicles, foods]
+        return randomThemeOptions
     }
     
-    private func getRandomTheme() -> [String] {
-        guard let index = theme.randomElement() else { return theme[0] }
+    func getRandomTheme() -> [String] {
+        guard let index = randomThemeOptions.randomElement() else { return randomThemeOptions[0] }
         return index
     }
     
