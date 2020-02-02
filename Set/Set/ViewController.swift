@@ -12,6 +12,7 @@ import UIKit
 class ViewController: UIViewController {
     
     @IBOutlet weak var scoreLabel: UILabel!
+    @IBOutlet weak var matchesLabel: UILabel!
     @IBOutlet weak var drawCardsButton: UIButton!
     @IBOutlet weak var newGameButton: UIButton!
     @IBOutlet var cardButtons: [UIButton]!
@@ -23,6 +24,7 @@ class ViewController: UIViewController {
                 setWasFound = checkIfSelectedButtonsFormASet()
                 if setWasFound {
                     score += 3
+                    matches += 1
                 } else {
                     score -= 5
                 }
@@ -40,11 +42,17 @@ class ViewController: UIViewController {
         }
     }
     
+    var matches = 0 {
+        didSet {
+            matchesLabel.text = "Matches: \(matches)"
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViewFromModel()
-        
     }
+    
     @IBAction func didPressDrawCardsButton(_ sender: UIButton) {
         set.draw()
         updateViewFromModel()
@@ -59,6 +67,7 @@ class ViewController: UIViewController {
         updateDrawButton()
         selectedButtons.removeAll()
         score = 0
+        matches = 0
     }
     
     @IBAction func didPressCardButton(_ sender: UIButton) {
@@ -108,14 +117,10 @@ class ViewController: UIViewController {
     }
     
     private func updateDrawButton() {
-        if set.cardsOnTable.count == 24 || set.cardDeck.count == 0 {
-            drawCardsButton.isEnabled = false
-            drawCardsButton.backgroundColor = .gray
-            drawCardsButton.setTitleColor(.black, for: .disabled)
+        if set.cardDeck.count == 0 {
+            drawCardsButton.isHidden = true
         } else {
-            drawCardsButton.isEnabled = true
-            drawCardsButton.backgroundColor = .red
-            drawCardsButton.setTitleColor(.white, for: .normal)
+            drawCardsButton.isHidden = false
         }
     }
     
