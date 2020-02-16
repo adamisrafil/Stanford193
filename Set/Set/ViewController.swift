@@ -15,10 +15,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var matchesLabel: UILabel!
     @IBOutlet weak var drawCardsButton: UIButton!
     @IBOutlet weak var newGameButton: UIButton!
-    @IBOutlet var cardButtons: [UIButton]!
+    @IBOutlet weak var cardsContainerView: CardContainerView!
     
     private var set = SetGame()
-    private var selectedButtons = [UIButton]() {
+    
+    private var selectedButtons = [SetCardButton]() {
         didSet {
             if selectedButtons.count == 3 {
                 setWasFound = checkIfSelectedButtonsFormASet()
@@ -50,19 +51,25 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        set.drawCardsForNewGame()
+        cardsContainerView.addCardButtons(numberOfCardButtonsToAdd: 12)
         updateViewFromModel()
+        assignTargetAction()
     }
     
     @IBAction func didPressDrawCardsButton(_ sender: UIButton) {
-        set.draw()
+        set.drawThreeCards()
+        cardsContainerView.addCardButtons(numberOfCardButtonsToAdd: 3)
         updateViewFromModel()
         updateDrawButton()
         selectedButtons.removeAll()
+        assignTargetAction()
+        cardsContainerView.layoutSubviews()
     }
     
     @IBAction func didPressNewGameButton(_ sender: UIButton) {
         set = SetGame()
-        resetButton()
+        cardsContainerView.layoutSubviews()
         updateViewFromModel()
         updateDrawButton()
         selectedButtons.removeAll()
@@ -70,27 +77,28 @@ class ViewController: UIViewController {
         matches = 0
     }
     
-    @IBAction func didPressCardButton(_ sender: UIButton) {
+    @objc func didPressCardButton(_ sender: UIButton) {
         if selectedButtons.count == 3 {
             selectedButtons.removeAll()
             updateViewFromModel()
+            cardsContainerView.layoutSubviews()
         }
-        if selectedButtons.contains(sender) {
+        if selectedButtons.contains(sender as! SetCardButton) {
             sender.layer.borderWidth = 0.0
-            if let buttonIndex = selectedButtons.firstIndex(of: sender) {
+            if let buttonIndex = selectedButtons.firstIndex(of: sender as! SetCardButton) {
                 selectedButtons.remove(at: buttonIndex)
             }
         } else {
             sender.layer.borderWidth = 3.0
             sender.layer.borderColor = UIColor.blue.cgColor
-            selectedButtons.append(sender)
+            selectedButtons.append(sender as! SetCardButton)
         }
     }
     
     private func checkIfSelectedButtonsFormASet() -> Bool {
         var selectedCardIndexes = [Int]()
         for button in selectedButtons {
-            if let selectedCardIndex = cardButtons.firstIndex(of: button) {
+            if let selectedCardIndex = cardsContainerView.cardButtons.firstIndex(of: button) {
                 selectedCardIndexes.append(selectedCardIndex)
             }
         }
@@ -98,21 +106,61 @@ class ViewController: UIViewController {
         return set.chooseCard(indexes: selectedCardIndexes)
     }
     
+    private func assignTargetAction() {
+        for button in cardsContainerView.cardButtons {
+            button.addTarget(self, action: #selector(didPressCardButton(_:)), for: .touchUpInside)
+        }
+    }
+    
     private func updateViewFromModel() {
-        for (index, button) in cardButtons.enumerated() {
+        if cardsContainerView.cardButtons.count > set.cardsOnTable.count {
+            cardsContainerView.removeCardButtons(numberOfCardButtonsToRemove: cardsContainerView.cardButtons.count - set.cardsOnTable.count)
+        }
+        
+        for (index, button) in cardsContainerView.cardButtons.enumerated() {
             if index < set.cardsOnTable.count {
-                let cardToDisplay = set.cardsOnTable[index]
-                let cardFaceString = setCardTitle(card: cardToDisplay)
-                button.setAttributedTitle(cardFaceString, for: .normal)
-                button.layer.borderWidth = 0.0
-                button.backgroundColor = .lightGray
-                button.isEnabled = true
-            } else {
+                let currentCard = set.cardsOnTable[index]
+                
                 button.backgroundColor = .white
-                button.layer.borderWidth = 0.0
-                button.isEnabled = false
-                button.setAttributedTitle(NSAttributedString(string: ""), for: .normal)
+                
+                switch currentCard.color {
+                case .purple:
+                    button.color = .purple
+                case .green:
+                    button.color = .green
+                case .red:
+                    button.color = .red
+                }
+                
+                switch currentCard.fill {
+                case .outlined:
+                    button.symbolShading = .outlined
+                case .solid:
+                    button.symbolShading = .solid
+                case .striped:
+                    button.symbolShading = .striped
+                }
+                
+                switch currentCard.shape {
+                case .diamond:
+                    button.symbolShape = .diamond
+                case .squiggle:
+                    button.symbolShape = .squiggle
+                case .oval:
+                    button.symbolShape = .oval
+                }
+                
+                switch currentCard.number {
+                case .one:
+                    button.numberOfSymbols = 1
+                case .two:
+                    button.numberOfSymbols = 2
+                case .three:
+                    button.numberOfSymbols = 3
+                }
             }
+            
+            updateDrawButton()
         }
     }
     
@@ -124,38 +172,24 @@ class ViewController: UIViewController {
         }
     }
     
-    private func resetButton() {
-        for button in cardButtons{
-            let nsAttributedString = NSAttributedString(string: "")
-            button.setAttributedTitle(nsAttributedString, for: .normal)
-            button.layer.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    // MARK: Gesture Recognizers
+    
+    @IBAction private func shuffle(_ recognizer: UIRotationGestureRecognizer) {
+        //        cardsContainerView.removeAllCardsFromTable()
+        //        set.shuffleCardsOnTable()
+        //        updateViewFromModel()
+        //        assignTargetAction()
+        if recognizer.state == .began {
+            set.shuffleCardsOnTable()
+            updateViewFromModel()
         }
     }
     
-    private func setCardTitle(card: Card) -> NSAttributedString {
-        let attributes: [NSAttributedString.Key: Any] = [
-            .strokeColor: ModelToView.colors[card.color]!,
-            .strokeWidth: ModelToView.strokeWidth[card.fill]!,
-            .foregroundColor: ModelToView.colors[card.color]!.withAlphaComponent(ModelToView.alpha[card.fill]!)
-        ]
-        var cardTitle = ModelToView.shapes[card.shape]!
-        switch card.number {
-        case .two:
-            cardTitle = "\(cardTitle) \(cardTitle)"
-        case .three:
-            cardTitle = "\(cardTitle) \(cardTitle) \(cardTitle)"
-        default:
-            break
-        }
-        
-        return NSAttributedString(string: cardTitle, attributes: attributes)
-    }
-    
-    struct ModelToView {
-        static let shapes: [Card.Shape: String] = [.circle: "●", .triangle: "▲", .square: "■"]
-        static let colors: [Card.Color: UIColor] = [.orange: .orange, .blue: .blue, .yellow: .yellow]
-        static let alpha: [Card.Fill: CGFloat] = [.solid: 1.0, .empty: 0.5, .stripe: 0.25]
-        static let strokeWidth: [Card.Fill: CGFloat] = [.solid: -5, .empty: 5, .stripe: -5]
+    @IBAction private func draw(_ recognizer: UISwipeGestureRecognizer) {
+        didPressDrawCardsButton(drawCardsButton)
+        updateViewFromModel()
+        updateDrawButton()
+        assignTargetAction()
     }
 }
 

@@ -72,13 +72,43 @@ struct SetGame {
         }
     }
     
-    mutating func draw() {
+    mutating func drawThreeCards() {
         if cardDeck.count > 0 {
             for _ in 1...3 {
                 cardsOnTable += [cardDeck.remove(at: cardDeck.randomIndex)]
             }
         }
         selectedCards.removeAll()
+    }
+    
+    mutating func drawCardsForNewGame() {
+        if cardDeck.count > 0 {
+            for _ in 0..<12 {
+                cardsOnTable += [cardDeck.remove(at: cardDeck.randomIndex)]
+            }
+        }
+    }
+    
+    private mutating func redrawShuffledCards() -> [Card] {
+        if cardDeck.count > 0 {
+            var drawCards = [Card]()
+            for _ in 1...3 {
+                drawCards.append(cardDeck.remove(at: cardDeck.randomIndex))
+            }
+            return drawCards
+        }
+        return []
+    }
+    
+    mutating func shuffleCardsOnTable() {
+        let numberOfCardsOnTable = cardsOnTable.count / 3
+        for card in cardsOnTable {
+            cardDeck.append(card)
+        }
+        cardsOnTable.removeAll()
+        for _ in 1...numberOfCardsOnTable {
+            cardsOnTable += redrawShuffledCards()
+        }
     }
     
     init() {
@@ -94,10 +124,7 @@ struct SetGame {
         }
         cardDeck.shuffle()
         
-        for index in 0..<12 {
-            cardsOnTable.append(cardDeck[index])
-            cardDeck.remove(at: index)
-        }
+        drawCardsForNewGame()
     }
 }
 

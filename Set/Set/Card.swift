@@ -27,27 +27,27 @@ struct Card: Equatable {
     enum Fill: String {
         
         case solid = "solid"
-        case stripe = "stripe"
-        case empty = "empty"
+        case striped = "striped"
+        case outlined = "outlined"
         
-        static let all = [Fill.solid, .stripe, .empty]
+        static let all = [Fill.solid, .striped, .outlined]
     }
     
     enum Shape: String {
         
-        case square = "square"
-        case triangle = "triangle"
-        case circle = "circle"
+        case squiggle = "squiggle"
+        case diamond = "diamond"
+        case oval = "oval"
         
-        static let all = [Shape.square, .triangle, .circle]
+        static let all = [Shape.squiggle, .diamond, .oval]
     }
     
     enum Color: String {
-        case orange = "orange"
-        case blue = "blue"
-        case yellow = "yellow"
+        case purple = "purple"
+        case red = "red"
+        case green = "green"
         
-        static let all = [Color.orange, .blue, .yellow]
+        static let all = [Color.purple, .red, .green]
     }
     
     init(color: Color, shape: Shape, number: Number, fill: Fill) {
