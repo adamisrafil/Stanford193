@@ -64,8 +64,9 @@ class ImageViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if imageURL == nil {
-            imageURL = DemoURLs.stanford
-        }
+//        if imageURL == nil {
+//            imageURL = DemoURLs.stanford
+//        }
+        
     }
 }
